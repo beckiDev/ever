@@ -1,3 +1,5 @@
+// Code goes here
+
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 import routing from './main.routes';
@@ -7,16 +9,25 @@ export class MainController {
   socket;
   awesomeThings = [];
   newThing = '';
+  SearchService;
 
   /*@ngInject*/
-  constructor($http, $scope, socket) {
+  constructor($http, $scope, socket, SearchService) {
     this.$http = $http;
     this.socket = socket;
+    $scope.search = function() {
+      SearchService.query(function(repositories) {
+        $scope.repositories = repositories;
+        //socket.syncUpdates('repositories', $scope.repositories);
+        console.log(repositories)
+      })
 
+    }
     $scope.$on('$destroy', function() {
       socket.unsyncUpdates('thing');
     });
   }
+
 
   $onInit() {
     this.$http.get('/api/things')
@@ -27,7 +38,7 @@ export class MainController {
   }
 
   addThing() {
-    if(this.newThing) {
+    if (this.newThing) {
       this.$http.post('/api/things', {
         name: this.newThing
       });
@@ -39,6 +50,13 @@ export class MainController {
     this.$http.delete(`/api/things/${thing._id}`);
   }
 }
+function SearchService($resource) {
+  'ngInject';
+  return $resource('https://api/github.com/repositories/', {
+      id: '@_id'
+    })
+  };
+
 
 export default angular.module('everstringApp.main', [uiRouter])
   .config(routing)

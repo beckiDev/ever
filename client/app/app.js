@@ -30,7 +30,7 @@ import socket from '../components/socket/socket.service';
 import './app.css';
 
 angular.module('everstringApp', [ngCookies, ngResource, ngSanitize, 'btford.socket-io', uiRouter,
-  uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util,  ngMaterial
+  uiBootstrap, _Auth, account, admin, navbar, footer, main, constants, socket, util
 ])
   .config(routeConfig)
   .run(function($rootScope, $location, Auth) {
